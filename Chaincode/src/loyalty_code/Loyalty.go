@@ -191,6 +191,9 @@ func (t *SimpleChaincode) retrieve_customer(stub shim.ChaincodeStubInterface, cu
 
 	err = json.Unmarshal(bytes, &v);
 
+	fmt.Printf("********************");
+	fmt.Printf(string(bytes));
+	fmt.Printf("********************");
     if err != nil {	fmt.Printf("RETRIEVE_CUSTOMER: Corrupt Customer record "+string(bytes)+": %s", err); return v, errors.New("RETRIEVE_CUSTOMER: Corrupt Customer record"+string(bytes))	}
 
 	return v, nil
