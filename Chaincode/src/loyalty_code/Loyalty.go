@@ -187,11 +187,11 @@ func (t *SimpleChaincode) retrieve_customer(stub shim.ChaincodeStubInterface, cu
 
 	bytes, err := stub.GetState(customerID);
 
-	if err != nil {	fmt.Printf("RETRIEVE_V5C: Failed to invoke Customer_code: %s", err); return v, errors.New("RETRIEVE_V5C: Error retrieving Customer with customerID = " + customerID) }
+	if err != nil {	fmt.Printf("RETRIEVE_CUSTOMER: Failed to invoke Customer_code: %s", err); return v, errors.New("RETRIEVE_CUSTOMER: Error retrieving Customer with customerID = " + customerID) }
 
 	err = json.Unmarshal(bytes, &v);
 
-    if err != nil {	fmt.Printf("RETRIEVE_V5C: Corrupt Customer record "+string(bytes)+": %s", err); return v, errors.New("RETRIEVE_V5C: Corrupt Customer record"+string(bytes))	}
+    if err != nil {	fmt.Printf("RETRIEVE_CUSTOMER: Corrupt Customer record "+string(bytes)+": %s", err); return v, errors.New("RETRIEVE_CUSTOMER: Corrupt Customer record"+string(bytes))	}
 
 	return v, nil
 }
