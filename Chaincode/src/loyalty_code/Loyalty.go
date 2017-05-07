@@ -342,22 +342,15 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 //=================================================================================================================================
 func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
 
-	caller, caller_affiliation, err := t.get_caller_data(stub)
-	if err != nil { fmt.Printf("QUERY: Error retrieving caller details", err); return nil, errors.New("QUERY: Error retrieving caller details: "+err.Error()) }
-
-    logger.Debug("function: ", function)
-    logger.Debug("caller: ", caller)
-    logger.Debug("affiliation: ", caller_affiliation)
-
 	if function == "get_customer_details" {
 		if len(args) != 1 { fmt.Printf("Incorrect number of arguments passed"); return nil, errors.New("QUERY: Incorrect number of arguments passed") }
 		v, err := t.retrieve_customer(stub, args[0])
 		if err != nil { fmt.Printf("QUERY: Error retrieving v5c: %s", err); return nil, errors.New("QUERY: Error retrieving v5c "+err.Error()) }
-		return t.get_customer_details(stub, v, caller, caller_affiliation)
+		return t.get_customer_details(stub, v)
 	} else if function == "check_unique_customer" {
-		return t.check_unique_customer(stub, args[0], caller, caller_affiliation)
+		return t.check_unique_customer(stub, args[0])
 	} else if function == "get_customers" {
-		return t.get_customers(stub, caller, caller_affiliation)
+		return t.get_customers(stub)
 	} else if function == "get_ecert" {
 		return t.get_ecert(stub, args[0])
 	} else if function == "ping" {
@@ -643,7 +636,7 @@ func (t *SimpleChaincode) update_price(stub shim.ChaincodeStubInterface, v Item,
 //=================================================================================================================================
 //	 get_customer_details
 //=================================================================================================================================
-func (t *SimpleChaincode) get_customer_details(stub shim.ChaincodeStubInterface, v Customer, caller string, caller_affiliation string) ([]byte, error) {
+func (t *SimpleChaincode) get_customer_details(stub shim.ChaincodeStubInterface, v Customer) ([]byte, error) {
 
 	bytes, err := json.Marshal(v)
 	if err != nil { return nil, errors.New("GET_CUSTOMER_DETAILS: Invalid Customer object") }
@@ -654,7 +647,7 @@ func (t *SimpleChaincode) get_customer_details(stub shim.ChaincodeStubInterface,
 //	 get_customers
 //=================================================================================================================================
 
-func (t *SimpleChaincode) get_customers(stub shim.ChaincodeStubInterface, caller string, caller_affiliation string) ([]byte, error) {
+func (t *SimpleChaincode) get_customers(stub shim.ChaincodeStubInterface) ([]byte, error) {
 	bytes, err := stub.GetState("customerIDs")
 	if err != nil { return nil, errors.New("Unable to get customerIDs") }
 	var customerIDs CustomerID_Holder
@@ -670,7 +663,7 @@ func (t *SimpleChaincode) get_customers(stub shim.ChaincodeStubInterface, caller
 
 		if err != nil {return nil, errors.New("Failed to retrieve Customer")}
 
-		temp, err = t.get_customer_details(stub, v, caller, caller_affiliation)
+		temp, err = t.get_customer_details(stub, v)
 
 		if err == nil {
 			result += string(temp) + ","
@@ -689,7 +682,7 @@ func (t *SimpleChaincode) get_customers(stub shim.ChaincodeStubInterface, caller
 //=================================================================================================================================
 //	 check_unique_customer
 //=================================================================================================================================
-func (t *SimpleChaincode) check_unique_customer(stub shim.ChaincodeStubInterface, customerID string, caller string, caller_affiliation string) ([]byte, error) {
+func (t *SimpleChaincode) check_unique_customer(stub shim.ChaincodeStubInterface, customerID string) ([]byte, error) {
 	_, err := t.retrieve_customer(stub, customerID)
 	if err == nil {
 		return []byte("false"), errors.New("Customer is not unique")
