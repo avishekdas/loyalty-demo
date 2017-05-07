@@ -379,12 +379,12 @@ func (t *SimpleChaincode) create_customer(stub shim.ChaincodeStubInterface, call
 	var v Customer
 
 	customerId		:= "\"CustomerID\":\""+customerID+"\", "							// Variables to define the JSON
-	name            := "\"Name\":0, "
+	name            := "\"Name\":\""+customerID+"\", "
 	address			:= "\"Address\":\"UNDEFINED\", "
-	cashback		:= "\"Cashback\":\"0\", "
+	cashback		:= "\"Cashback\":0, "
 	email			:= "\"Email\":\"UNDEFINED\", "
 	phone			:= "\"Phone\":\"UNDEFINED\", "
-	status			:= "\"Status\":\"true\", "
+	status			:= "\"Status\":true "
 		
 	customer_json := "{"+customerId+name+address+cashback+email+phone+status+"}" 	// Concatenates the variables to create the total JSON object
 	matched, err := regexp.Match("^[A-z][A-z][0-9]{7}", []byte(customerID))  				// matched = true if the v5cID passed fits format of two letters followed by seven digits
