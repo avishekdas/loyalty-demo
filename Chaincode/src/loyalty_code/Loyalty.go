@@ -250,7 +250,7 @@ func (t *SimpleChaincode) save_changes(stub shim.ChaincodeStubInterface, v Custo
 
 	if err != nil { fmt.Printf("SAVE_CHANGES: Error converting customer record: %s", err); return false, errors.New("Error converting customer record") }
 
-	err = stub.PutState(v.Name, bytes)
+	err = stub.PutState(v.CustomerID, bytes)
 
 	if err != nil { fmt.Printf("SAVE_CHANGES: Error storing customer record: %s", err); return false, errors.New("Error storing customer record") }
 
@@ -388,7 +388,7 @@ func (t *SimpleChaincode) create_customer(stub shim.ChaincodeStubInterface, call
 	cashback		:= "\"Cashback\":0, "
 	email			:= "\"Email\":\"UNDEFINED\", "
 	phone			:= "\"Phone\":\"UNDEFINED\", "
-	status			:= "\"Status\":true "
+	status			:= "\"Status\":true"
 		
 	customer_json := "{"+customerId+name+address+cashback+email+phone+status+"}" 	// Concatenates the variables to create the total JSON object
 	matched, err := regexp.Match("^[A-z][A-z][0-9]{7}", []byte(customerID))  				// matched = true if the v5cID passed fits format of two letters followed by seven digits
