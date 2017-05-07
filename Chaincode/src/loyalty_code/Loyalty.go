@@ -309,7 +309,7 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 	} else if function == "ping" {
         return t.ping(stub)
     } else { 																	// If the function is not a create then there must be a car so we need to retrieve the customer.
-		argPos := 1
+		argPos := 0
 
 		if function == "delete_customer" {										// If its a scrap vehicle then only two arguments are passed (no update value) all others have three arguments and the customerID is expected in the last argument
 			argPos = 0
