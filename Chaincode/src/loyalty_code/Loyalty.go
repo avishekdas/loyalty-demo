@@ -207,11 +207,11 @@ func (t *SimpleChaincode) retrieve_item(stub shim.ChaincodeStubInterface, itemID
 
 	bytes, err := stub.GetState(itemID);
 
-	if err != nil {	fmt.Printf("RETRIEVE_ITEM: Failed to invoke ItemID: %s", err); return v, errors.New("RETRIEVE_ITEM: Error retrieving Customer with customerID = " + itemID) }
+	if err != nil {	fmt.Printf("RETRIEVE_ITEM: Failed to invoke ItemID: %s", err); return v, errors.New("RETRIEVE_ITEM: Error retrieving Item with ItemID = " + itemID) }
 
 	err = json.Unmarshal(bytes, &v);
 
-    if err != nil {	fmt.Printf("RETRIEVE_ITEM: Corrupt Item record "+string(bytes)+": %s", err); return v, errors.New("RETRIEVE_ITEM: Corrupt Customer record"+string(bytes))	}
+    if err != nil {	fmt.Printf("RETRIEVE_ITEM: Corrupt Item record "+string(bytes)+": %s", err); return v, errors.New("RETRIEVE_ITEM: Corrupt Item record"+string(bytes))	}
 
 	return v, nil
 }
@@ -378,17 +378,15 @@ func (t *SimpleChaincode) ping(stub shim.ChaincodeStubInterface) ([]byte, error)
 func (t *SimpleChaincode) create_customer(stub shim.ChaincodeStubInterface, caller string, caller_affiliation string, customerID string) ([]byte, error) {
 	var v Customer
 
-	customerId		:= "\"customerID\":\""+customerID+"\", "							// Variables to define the JSON
+	customerId		:= "\"CustomerID\":\""+customerID+"\", "							// Variables to define the JSON
 	name            := "\"Name\":0, "
 	address			:= "\"Address\":\"UNDEFINED\", "
-	walletID		:= "\"WalletID\":\"UNDEFINED\", "
+	cashback		:= "\"Cashback\":\"UNDEFINED\", "
 	email			:= "\"Email\":\"UNDEFINED\", "
 	phone			:= "\"Phone\":\"UNDEFINED\", "
-	colour			:= "\"Colour\":\"UNDEFINED\", "
-	active			:= "\"Active\":\"UNDEFINED\", "
-	level			:= "\"Level\":0, "
-	
-	customer_json := "{"+customerId+name+address+walletID+email+phone+phone+colour+active+level+"}" 	// Concatenates the variables to create the total JSON object
+	status			:= "\"Status\":\"UNDEFINED\", "
+		
+	customer_json := "{"+customerId+name+address+cashback+email+phone+status+"}" 	// Concatenates the variables to create the total JSON object
 	matched, err := regexp.Match("^[A-z][A-z][0-9]{7}", []byte(customerID))  				// matched = true if the v5cID passed fits format of two letters followed by seven digits
 	if err != nil { fmt.Printf("CREATE_CUSTOMER: Invalid customerID: %s", err); return nil, errors.New("Invalid customerID") }
 
