@@ -40,7 +40,7 @@ type Customer struct {
 //==============================================================================================================================
 
 type CustomerID_Holder struct {
-	CustomerIDs 	[]string `json:"customerIDs"`
+	Customers 	[]string `json:"customers"`
 }
 
 //==============================================================================================================================
@@ -197,12 +197,12 @@ func (t *SimpleChaincode) create_customer(stub shim.ChaincodeStubInterface, cust
 	
 	_, err  = t.save_changes(stub, v)
 	if err != nil { fmt.Printf("CREATE_CUSTOMER: Error saving changes: %s", err); return nil, errors.New("Error saving changes") }
-	bytes, err := stub.GetState("customerID")
+	bytes, err := stub.GetState("customerIDs")
 	if err != nil { return nil, errors.New("Unable to get customerID") }
 	var customerIDs CustomerID_Holder
 	err = json.Unmarshal(bytes, &customerIDs)
 	if err != nil {	return nil, errors.New("Corrupt Customer record") }
-	customerIDs.CustomerIDs = append(customerIDs.CustomerIDs, customerID)
+	customerIDs.Customers = append(customerIDs.Customers, customerID)
 	bytes, err = json.Marshal(customerIDs)
 	if err != nil { fmt.Print("Error creating Customer record") }
 	err = stub.PutState("customerIDs", bytes)
@@ -300,7 +300,7 @@ func (t *SimpleChaincode) get_customers(stub shim.ChaincodeStubInterface) ([]byt
 	var temp []byte
 	var v Customer
 
-	for _, customer := range customerIDs.CustomerIDs {
+	for _, customer := range customerIDs.Customers {
 
 		v, err = t.retrieve_customer(stub, customer)
 
