@@ -187,7 +187,7 @@ func (t *SimpleChaincode) create_customer(stub shim.ChaincodeStubInterface, cust
 	if err != nil { fmt.Printf("CREATE_VEHICLE: Invalid customerID: %s", err); return nil, errors.New("Invalid customerID") }
 	if	customerID  == "" || matched == false {
 		fmt.Printf("CREATE_CUSTOMER: Invalid customerID provided");
-		return nil, errors.New("Invalid customerID provided")
+		return nil, errors.New("Invalid customerID provided "+customerID)
 	}
 
 	err = json.Unmarshal([]byte(customer_json), &v)	// Convert the JSON defined above into a customer object for go
